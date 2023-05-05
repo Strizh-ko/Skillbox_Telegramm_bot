@@ -2,7 +2,6 @@ import datetime
 import re
 
 
-
 def arrivedate(date: str):
     try:
         d, m, y = re.split('\W', date)
@@ -20,8 +19,6 @@ def arrivedate(date: str):
         if date < today:
             raise ValueError
 
-
-
     except:
         return False
 
@@ -29,13 +26,10 @@ def arrivedate(date: str):
 
 
 def departdate(days: str, date: str):
-
     if days.isdigit() and int(days) > 0:
-
         depdate = int(date) + int(days)
         depdate = datetime.datetime.date(datetime.datetime.fromordinal(depdate))
         y, m, d = re.split('\W', str(depdate))
-
     else:
         return False
 
