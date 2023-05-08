@@ -38,6 +38,7 @@ def get_date(message: Message):
     if date.arrivedate(message.text):
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['ad'], data['am'], data['ay'], data['o'] = date.arrivedate(message.text)
+            data['a_date'] = '.'.join([data['ad'], data['am'], data['ay']])
         bot.send_message(message.from_user.id, f"Принято.\nНа сколько дней?")
         bot.set_state(message.from_user.id, FindHotelState.days, message.chat.id)
     else:
@@ -49,6 +50,7 @@ def get_days(message: Message):
     with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
         if date.departdate(message.text, data['o']):
             data['dd'], data['dm'], data['dy'] = date.departdate(message.text, data['o'])
+            data['d_date'] = '.'.join([data['dd'], data['dm'], data['dy']])
             bot.send_message(message.from_user.id, f"Ок, Записал.\n"
                                                    f"Сколько будет человек?")
             bot.set_state(message.from_user.id, FindHotelState.people, message.chat.id)
@@ -63,8 +65,8 @@ def get_people(message: Message):
         with bot.retrieve_data(message.from_user.id, message.chat.id) as data:
             data['people'] = int(message.text)
             data['search_param_text'] = f"Город назначения: {list(data['cities_dct'].items())[0][0]}\n" \
-                                        f"Дата прибытия: {data['ad']}.{data['am']}.{data['ay']}\n" \
-                                        f"Дата отбытия: {data['dd']}.{data['dm']}.{data['dy']}\n" \
+                                        f"Дата прибытия: {data['a_date']}\n" \
+                                        f"Дата отбытия: {data['d_date']}\n" \
                                         f"Количество человек: {data['people']}\n"
             if data['command'] == '/bestdeal':
                 bot.send_message(message.from_user.id, f'Далее, на какую максимальную стоимость вы раcчитываете?')
